@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digitalinovationone.dto.MessageResponseDTO;
-import com.digitalinovationone.entites.Person;
+import com.digitalinovationone.dto.PersonDTO;
 import com.digitalinovationone.service.PersonService;
 
 @RestController
@@ -21,8 +21,8 @@ public class PersonController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public MessageResponseDTO cretePerson(@RequestBody Person p) {
-		return personService.createPerson(p);
+	public MessageResponseDTO cretePerson(@RequestBody PersonDTO personDTO) {
+		return personService.createPerson(personDTO);
 	}
 	
 }
