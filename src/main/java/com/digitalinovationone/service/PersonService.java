@@ -3,6 +3,8 @@ package com.digitalinovationone.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +28,7 @@ public class PersonService {
 
 		savedPerson = repository.save(savedPerson);
 
-		return MessageResponseDTO.builder().message("Created Person with ID " + savedPerson.getId()).build();
-
+		return message(savedPerson.getId(), "Person created with id");
 	}
 
 	public List<PersonDTO> listAll() {
@@ -43,13 +44,26 @@ public class PersonService {
 
 	public void delete(Long id) throws PersonNotFoundException {
 		verifyExists(id);
-		
+
 		repository.deleteById(id);
 	}
 	
-	public Person verifyExists(Long id) throws PersonNotFoundException {
-		return repository.findById(id).orElseThrow(() -> new PersonNotFoundException(id));
-		
+	public MessageResponseDTO update(Long id, @Valid PersonDTO personDTO) throws PersonNotFoundException {
+		verifyExists(id);
+		Person updatePerson = personMapper.toModel(personDTO);
+		repository.save(updatePerson);
+		return message(id, "person updated with id ");
 	}
+
+	private Person verifyExists(Long id) throws PersonNotFoundException {
+		return repository.findById(id).orElseThrow(() -> new PersonNotFoundException(id));
+
+	}
+
+	private MessageResponseDTO message(Long id, String message) {
+		return MessageResponseDTO.builder().message(message + id).build();
+	}
+
+
 
 }
